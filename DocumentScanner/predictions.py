@@ -106,8 +106,8 @@ def getPredictions(image):
     datafram_tokens.fillna('O',inplace=True)
 
     # join lable to df_clean dataframe
-    df_clean['end'] = df_clean['text'].apply(lambda x: len(x)+1).cumsum() - 1 
-    df_clean['start'] = df_clean[['text','end']].apply(lambda x: x[1] - len(x[0]),axis=1)
+    df_clean['end'] = df_clean['text'].apply(lambda x: len(x)+1).cumsum() - 1
+    df_clean['start'] = df_clean[['text','end']].apply(lambda x: x['end'] - len(x['text']), axis=1)
 
     # inner join with start 
     dataframe_info = pd.merge(df_clean,datafram_tokens[['start','token','label']],how='inner',on='start')
@@ -128,14 +128,12 @@ def getPredictions(image):
     col_group = ['left','top','right','bottom','label','token','group']
     group_tag_img = bb_df[col_group].groupby(by='group')
     img_tagging = group_tag_img.agg({
-
-        'left':min,
-        'right':max,
-        'top':min,
-        'bottom':max,
-        'label':np.unique,
-        'token':lambda x: " ".join(x)
-
+        'left': min,
+        'right': max,
+        'top': min,
+        'bottom': max,
+        'label': lambda x: " ".join(np.unique(x)),
+        'token': lambda x: " ".join(x)
     })
 
     img_bb = image.copy()
