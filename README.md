@@ -39,3 +39,13 @@ This project automates the extraction and organization of information from busin
 
 ## License
 This project is for educational and personal use.
+
+## Windows Long Path Support
+If you encounter errors during package installation due to long file paths, enable Windows Long Path support:
+
+1. Open PowerShell as Administrator.
+2. Run:
+	Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\FileSystem' -Name 'LongPathsEnabled' -Value 1
+3. Restart your computer.
+
+This allows Python and pip to handle long file paths required by some packages.
